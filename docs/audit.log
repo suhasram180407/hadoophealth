@@ -1,0 +1,85 @@
+[2026-09-22 23:13:54]
+Action: Workspace inspection
+Result: Verified D:\assignment3db\dataset exists with 111 raw healthcare JSON files (~368 MB).
+Status: PASS
+
+[2026-09-22 23:14:08]
+Action: Process verification (jps)
+Result: Checked running Java processes; no prior daemons active.
+Status: READY
+
+[2026-09-22 23:14:25]
+Action: Inspected Hadoop configuration
+Result: C:\hadoop\etc\hadoop\core-site.xml (fs.defaultFS=hdfs://localhost:9000), hdfs-site.xml (replication=1, namenode dir=file:///C:/hadoop/data/namenode, datanode dir=file:///C:/hadoop/data/datanode).
+Status: PASS
+
+[2026-09-22 23:14:44]
+Action: Inspected HBase configuration
+Result: C:\hbase\conf\hbase-site.xml (hbase.cluster.distributed=false, rootdir=file:///C:/hbase/data, zookeeper clientPort=2181).
+Status: PASS
+
+[2026-09-22 23:15:42]
+Action: Inspected healthcare dataset schemas
+Result: Confirmed 109 patient FHIR bundles with Patient, Encounter, Condition, Medication, Observation resources; 1 Organization file; 1 Practitioner file.
+Status: PASS
+
+[2026-09-22 23:20:33]
+Action: Gate 1 HDFS Startup & Verification
+Result: NameNode and DataNode running; 1 live DataNode confirmed via dfsadmin -report; 111 JSON files verified in /healthcare/raw; SafeMode OFF.
+Status: PASS (GATE 1 APPROVED)
+
+[2026-09-22 23:28:09]
+Action: Gate 2 HBase Standalone Startup & Verification
+Result: HMaster started (PID 18172); embedded ZooKeeper listening on port 2181; master completed initialization in 10.6s.
+Status: PASS (GATE 2 APPROVED)
+
+[2026-09-22 23:28:56]
+Action: Gate 3 HBase REST Startup & Verification
+Result: RESTServer started (PID 14768); http://localhost:8080/version returned "Version: 2.5.15-hadoop3"; /status/cluster returned "1 live servers, 0 dead servers".
+Status: PASS (GATE 3 APPROVED)
+
+[2026-09-22 23:29:31]
+Action: Gate 4 FHIR JSON Schema Analysis
+Result: Analyzed 109 patient files (FHIR Patient UUID, HumanName, Telecom, Address, Encounters, Conditions, Medications), 557 Organizations, 556 Practitioners.
+Status: PASS (GATE 4 APPROVED)
+
+[2026-09-22 23:30:11]
+Action: Gate 5 HBase Schema Creation
+Result: Programmatically created table "healthcare_patients" with column family "info" via HBase REST API (HTTP 201 Created); verified in / table list.
+Status: PASS (GATE 5 APPROVED)
+
+[2026-09-22 23:41:00]
+Action: Gate 6 Backend Implementation, Ingestion & Automated Testing
+Result: FastAPI backend created with HDFS, HBase, Patient, System, Ingestion modules; 10/10 pytest unit tests passed; 109 patient records ingested into HBase in 9.7s; all REST endpoints verified over HTTP.
+Status: PASS (GATE 6 APPROVED)
+
+[2026-09-23 00:10:00]
+Action: Gate 7 Frontend Implementation & Integration
+Result: React (Vite + TypeScript) dashboard built in frontend/; 0 TypeScript compilation errors; built production bundle in 1.06s; development server running on port 5173.
+Status: PASS (GATE 7 APPROVED)
+
+[2026-09-23 00:17:00]
+Action: End-to-End System Verification
+Result: All 6 infrastructure services active; 111 JSON files accessible in HDFS; 115 patient records accessible in HBase; FastAPI backend operational on port 8000; React UI operational on port 5173; zero data loss; docs/STARTUP.md and docs/SHUTDOWN.md created.
+Status: COMPLETE & VERIFIED
+
+[2026-09-23 16:53:00]
+Action: Post-Reboot Service Reactivation & Verification
+Result: Followed docs/STARTUP.md to restart NameNode, DataNode, HMaster, HBase REST, FastAPI, and Vite dev server. Verified 111 HDFS raw files, HBase table healthcare_patients online, FastAPI /api/health responding "ok", 10/10 pytest passed in 22.35s, React frontend active on port 5173.
+Status: ALL SERVICES PASSING
+
+[2026-09-23 21:35:00]
+Action: HBase Idle Timeout Hardening & Verification
+Result: Configured zookeeper.session.timeout and maxSessionTimeout to 3,600,000 ms in C:\hbase\conf\hbase-site.xml to prevent JVM pause session expirations during Windows idle states. Restarted HMaster (PID 2728) and HBase REST (8080). Verified cluster status (1 live server, healthcare_patients region online) and FastAPI /api/health responding "ok".
+Status: PASS & STABLE
+
+[2026-09-24 09:32:00]
+Action: Post-Overnight Resumption & Health Verification
+Result: Restarted HMaster (PID 17156) and HBase REST (8080) following overnight host sleep. Confirmed HDFS NameNode (9000/9870) and DataNode (9866/9864) serving 111 raw files, HBase healthcare_patients serving 115 patient records, FastAPI backend (/api/health) responding "ok", and React Vite frontend active at http://localhost:5173/.
+Status: ALL SERVICES PASSING
+
+
+
+
+
+
